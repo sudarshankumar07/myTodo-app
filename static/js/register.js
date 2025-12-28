@@ -1,18 +1,10 @@
 login = document.querySelector(".login-btn")
-login.addEventListener("click",()=>callAPI("/api/login"))
+login.addEventListener("click",()=>{
+    window.location.href="/register_page"
+})
 let msg = document.querySelector(".none")
 let msg1 = document.querySelector("#msg1")
 
-function callAPI(url){
-    fetch(url,{method:"POST"})
-    .then(res => res.json())
-    .then(data=>{
-        if(data.success){
-            window.location.href = data.redirect;
-        }
-    })
-    .catch(err=>console.error(err))
-}
 
 signup = document.querySelector(".sign-btn")
 signup.addEventListener("click",async()=>{
@@ -46,5 +38,6 @@ signup.addEventListener("click",async()=>{
         msg1.classList.remove("msg1")
         msg1.classList.add("none")
     }
+
 
 })
