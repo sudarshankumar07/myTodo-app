@@ -1,7 +1,6 @@
 login = document.querySelector(".login-btn")
 login.addEventListener("click",()=>callAPI("/api/login"))
-let msg = document.querySelector(".none")
-let msg1 = document.querySelector("#msg1")
+
 
 function callAPI(url){
     fetch(url,{method:"POST"})
@@ -44,12 +43,15 @@ signup.addEventListener("click",async()=>{
     if(data.success){
         window.location.href="/login_page"
     }else{
-        msg1.classList.add("none")
+        msg.classList.add("msg")
+        msg.classList.remove("none")
         msg1.classList.remove("msg1")
+        msg1.classList.add("none")
     }
 
 
 })
+
 
 
 
