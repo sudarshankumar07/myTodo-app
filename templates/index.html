@@ -12,10 +12,11 @@
         <p class="welcome-msg"> Login If You already have an Account, or create a New one</p>
     <div class="main">
         
-        <div class="log" tabindex="0">Log In</div>
-        <div class="reg" tabindex="0">Register</div>
+        <div class="log" tabindex="0" onclick="window.location.href='/login_page'">Log In</div>
+        <div class="reg" tabindex="0" onclick="window.location.href='/register_page'">Register</div>
     </div>
     </div>
     <script src="{{url_for('static', filename='js/index.js')}}"></script>
 </body>
+
 </html>
