@@ -117,14 +117,6 @@ def signup():
         cursor.close()
         db.close()
 
-@app.route("/api/login", methods=["POST"])
-def login():
-    return jsonify(success = True, redirect="/login_page")
-
-#__ANYONE CLICK REGISTER BTN IT WILL REDIRECT TO REGISTER PAGE
-@app.route("/api/register", methods=["POST"])
-def register():
-    return jsonify(success = True, redirect="/register_page")
 # ---------------- LOGIN ----------------
 @app.route("/user-login", methods=["POST"])
 def user_login():
@@ -261,5 +253,6 @@ def show_task():
 def logout():
     session.pop("user_id", None)
     return jsonify({"success": True, "redirect": "/login_page"})
+
 
 
