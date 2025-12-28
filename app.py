@@ -1,12 +1,62 @@
 from flask import Flask, render_template, session, request, jsonify, redirect, url_for
-import pymysql
 from werkzeug.security import generate_password_hash, check_password_hash
+import psycopg2
+from psycopg2.extras import RealDictCursor
 import os
 
 app = Flask(__name__)
 
-# SECRET KEY (Render ENV)
-app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret")
+# ---------------- SECRET KEY ----------------
+SECRET_KEY = os.environ.get("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY not set")
+
+app.secret_key = SECRET_KEY
+
+
+# ---------------- DATABASE ----------------
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL not set")
+
+
+def get_db_connection():
+    return psycopg2.connect(
+        DATABASE_URL,
+        cursor_factory=RealDictCursor
+    )
+
+
+def init_db():
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(150) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS todo (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            title VARCHAR(255) NOT NULL,
+            task TEXT NOT NULL,
+            description TEXT,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    """)
+
+    db.commit()
+    cursor.close()
+    db.close()
+
+
+init_db()
 
 
 # ---------------- HOME ----------------
@@ -22,13 +72,6 @@ def reg_log():
     return render_template("index.html")
 
 
-# ---------------- TEST API ----------------
-@app.route("/api/data", methods=["POST"])
-def data():
-    data = request.json
-    return jsonify({"message": f"Hello {data['name']}"})
-
-
 # ---------------- AUTH PAGES ----------------
 @app.route("/login_page")
 def login_page():
@@ -38,29 +81,6 @@ def login_page():
 @app.route("/register_page")
 def register_page():
     return render_template("register.html")
-
-
-@app.route("/api/login", methods=["POST"])
-def login():
-    return jsonify(success=True, redirect="/login_page")
-
-
-@app.route("/api/register", methods=["POST"])
-def register():
-    return jsonify(success=True, redirect="/register_page")
-
-
-# ---------------- DB CONNECTION (RENDER SAFE) ----------------
-def get_db_connection():
-    return pymysql.connect(
-        host=os.environ.get("DB_HOST"),
-        user=os.environ.get("DB_USER"),
-        password=os.environ.get("DB_PASSWORD"),
-        database=os.environ.get("DB_NAME"),
-        port=int(os.environ.get("DB_PORT", 3306)),
-        cursorclass=pymysql.cursors.DictCursor,
-        autocommit=True
-    )
 
 
 # ---------------- SIGNUP ----------------
@@ -85,9 +105,14 @@ def signup():
             "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
             (name, email, hashed)
         )
+        db.commit()
         return jsonify({"success": True, "redirect": "/login_page"})
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+    except psycopg2.IntegrityError:
+        db.rollback()
+        return jsonify({"success": False, "message": "Email already exists"}), 409
+    except Exception:
+        db.rollback()
+        return jsonify({"success": False, "message": "Internal server error"}), 500
     finally:
         cursor.close()
         db.close()
@@ -95,7 +120,7 @@ def signup():
 
 # ---------------- LOGIN ----------------
 @app.route("/user-login", methods=["POST"])
-def userLogin():
+def user_login():
     data = request.get_json()
     email = data.get("email")
     password = data.get("password")
@@ -130,9 +155,9 @@ def userLogin():
 @app.route("/api/session")
 def check_session():
     if "user_id" not in session:
-        return {"logged_in": False}, 401
+        return jsonify({"logged_in": False}), 401
 
-    return {"logged_in": True, "user_id": session["user_id"]}
+    return jsonify({"logged_in": True, "user_id": session["user_id"]})
 
 
 # ---------------- TODO PAGE ----------------
@@ -165,20 +190,23 @@ def profile():
 
 # ---------------- ADD TASK ----------------
 @app.route("/api/add_task", methods=["POST"])
-def addTask():
+def add_task():
     if "user_id" not in session:
         return jsonify({"error": "Unauthorized"}), 401
 
     data = request.get_json(silent=True)
     if not data:
-        return jsonify({"success": False, "error": "Invalid JSON"}), 400
+        return jsonify({"error": "Invalid JSON"}), 400
 
     db = get_db_connection()
     cursor = db.cursor()
 
     try:
         cursor.execute(
-            "INSERT INTO todo (user_id, title, task, description) VALUES (%s, %s, %s, %s)",
+            """
+            INSERT INTO todo (user_id, title, task, description)
+            VALUES (%s, %s, %s, %s)
+            """,
             (
                 session["user_id"],
                 data.get("title"),
@@ -186,9 +214,11 @@ def addTask():
                 data.get("description", "")
             )
         )
+        db.commit()
         return jsonify({"success": True}), 201
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+    except Exception:
+        db.rollback()
+        return jsonify({"error": "Internal server error"}), 500
     finally:
         cursor.close()
         db.close()
@@ -205,7 +235,12 @@ def show_task():
 
     try:
         cursor.execute(
-            "SELECT id, title, task, description FROM todo WHERE user_id = %s ORDER BY id DESC",
+            """
+            SELECT id, title, task, description
+            FROM todo
+            WHERE user_id = %s
+            ORDER BY id DESC
+            """,
             (session["user_id"],)
         )
         return jsonify({"success": True, "tasks": cursor.fetchall()})
@@ -218,9 +253,4 @@ def show_task():
 @app.route("/api/logout", methods=["POST"])
 def logout():
     session.pop("user_id", None)
-    return jsonify(success=True, redirect="/login_page")
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug= True)
-
-
+    return jsonify({"success": True, "redirect": "/login_page"})
