@@ -1,8 +1,3 @@
- register = document.querySelector(".sign-btn")
-register.addEventListener("click",()=>{
-    window.location.href='"/register_page"
-})
-
 login = document.querySelector(".login-btn")
 
 login.addEventListener("click",async()=>{
@@ -34,3 +29,4 @@ login.addEventListener("click",async()=>{
     })
 
 })
+
