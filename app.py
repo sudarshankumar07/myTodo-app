@@ -219,3 +219,7 @@ def show_task():
 def logout():
     session.pop("user_id", None)
     return jsonify(success=True, redirect="/login_page")
+
+if __name == "__main__":
+    app.run(host="0.0.0.0", debug= True)
+
