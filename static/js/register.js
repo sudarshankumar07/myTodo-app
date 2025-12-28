@@ -1,6 +1,6 @@
 login = document.querySelector(".login-btn")
 login.addEventListener("click",()=>{
-    window.location.href="/register_page"
+    window.location.href="/login_page"
 })
 let msg = document.querySelector(".none")
 let msg1 = document.querySelector("#msg1")
@@ -41,3 +41,4 @@ signup.addEventListener("click",async()=>{
 
 
 })
+
