@@ -1,0 +1,86 @@
+body{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:linear-gradient(135deg,rgb(228, 206, 228),rgb(42, 42, 139));
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+.main{
+    display: flex;
+    justify-content: center;
+    height: 80vh;
+    width: 70vw;
+    background: linear-gradient(red,blue);
+    border-radius: 10px;
+}
+.welcome{
+    width: 20vw;
+    padding-left: 5vw;
+    padding-top: 15vh;
+    padding-right: 5vw;
+    background:linear-gradient(135deg,#004d40,#00796b);
+    border-top-left-radius:10px ;
+    border-bottom-left-radius: 10px;
+    color: white;
+
+
+}
+.signin{
+    width: 35vw;
+    color: #00332a;
+    font-size: 28px;
+    font-weight: 700;
+    background-color:rgba(255,255,255,.8);
+    padding-left: 10vw;
+    padding-top: 10vh;
+    border-top-right-radius:10px ;
+    border-bottom-right-radius: 10px;
+    letter-spacing:-0.5px;
+}
+.signin_detail{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+}
+input{
+    width: 15vw;
+    border:none;
+    background-color:#f0f9f7;
+    border-radius: 2px;
+    padding-left: 2px;
+    height: 3vh;
+    color: #000000;
+
+}
+.sign-btn,.login-btn{
+    margin-left:60px;
+    margin-top: 40px;
+    background:linear-gradient(135deg,#004d40,#00796b);
+    display:inline-block;
+    padding:10px;
+    padding-top: 5px;
+    border-radius: 15px;
+    color: white;
+    font-size: 20px;
+    font-weight:500;
+    letter-spacing:0px;
+}
+.sign-btn{
+    background:linear-gradient(white,wheat);
+    color: #00332a;
+    font-weight: 700;
+}
+.none{
+    display: none;
+}
+.msg,.msg1{
+    font-size: small;
+    font-weight: 600;
+    color: red;
+    margin-left: 20px;
+}
+.msg1{
+    margin-left: 50px;
+}

@@ -1,0 +1,52 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg,rgb(42, 42, 139),rgb(228, 206, 228));
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: -.5px;
+}
+.main{
+    border-radius: 10px;
+    background:linear-gradient(135deg,#2f2691,#134e47);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20vh;
+    width: 100%;
+}
+.log,.reg{
+    height: 5vh;
+    width: 8vw;
+    background: linear-gradient(135deg,#465261,#00796b);
+    border-radius: 10px;
+    color: white;
+    font-size: larger;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+    
+}
+.reg{
+    margin-left: 1vw;
+}
+h1{
+    color: white;
+    margin-left: 10px;
+}
+.all{
+    background:linear-gradient(135deg,#2f2691,#134e47);
+    border-radius: 10px;
+    font-family:sans-serif;
+    width: 30vw;
+    
+}
+.welcome-msg{
+    margin-left: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: medium;
+}
