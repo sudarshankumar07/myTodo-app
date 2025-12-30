@@ -255,5 +255,76 @@ def logout():
     return jsonify({"success": True, "redirect": "/login_page"})
 
 
+@app.route("/delete-task", methods=["POST"])
+def deleteTask():
+    user_id = session.get('user_id')
+    data = request.get_json()
+    task_id = data.get("task_id")
+    if not user_id or not task_id:
+        return jsonify({"success":False}), 401
+    db = get_db_connection()
+    cursor = db.cursor()
+    try:
+        cursor.execute(
+                "DELETE FROM todo WHERE id = %s AND user_id = %s",
+                (task_id,user_id)
+            )
+        db.commit()
+        deleted = cursor.rowcount
+        return jsonify({"success": deleted == 1}),200
+    except Exception as e:
+        db.rollback()
+        return jsonify({"success": False , "error": (e)}),500
+    finally:
+        cursor.close()
+        db.close()
+
+@app.route("/update-task/<int:taskId>", methods = ["PATCH"])
+def updateTask(taskId):
+    data = request.get_json()
+    task_id = taskId
+    
+    if not task_id:
+        return jsonify({"error":"task_id is required"}),400
+    fields = []
+    values = []
+    if "title" in data:
+        fields.append("title = %s")
+        values.append(data["title"])
+    
+    if "task" in data:
+        fields.append("task = %s")
+        values.append(data["task"])
+
+    if "description" in data:
+        fields.append("description = %s")
+        values.append(data["description"])
+    if not fields:
+        return jsonify({"error":"no fields to update"}),400
+    query = f""" 
+            UPDATE todo 
+            SET {', '.join(fields)}
+            WHERE ID = %s
+            """
+    values.append(task_id)
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+        cursor.execute(query, tuple(values))
+        db.commit()
+        if cursor.rowcount == 0:
+            return jsonify({"error":"Task not found"}),404
+        return jsonify({"success":True, "message":"Task Updated successfully" })   
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error":str(e)}),500
+    finally:
+        cursor.close()
+        db.close()  
+
+
+
+
+
 
 
