@@ -32,7 +32,6 @@
         <label>Add a Title:</label><br>
         <input type="text" id="title" placeholder="Input A title to your ToDo">
       </div>
-
       <div class="Task">
         <label>Add Task:</label><br>
         <input type="text" id="task" placeholder="Input task">
@@ -47,17 +46,16 @@
         <button class="add-task-btn">Add Task</button>
       </div>
     </div>
-  </div>
-
+  </div> 
   <!-- TODO LIST -->
   <div class="to-do-list-container">
-    <div class="todo-list"></div>
+    <div class="todo-list">
+    </div>
   </div>
 
   <!-- JS -->
-  <script src="{{ url_for('static', filename='js/mytodo.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/myTOdo.js') }}"></script>
   <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
 
 </body>
 </html>
-
