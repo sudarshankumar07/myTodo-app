@@ -1,5 +1,12 @@
 const todoList = document.querySelector(".todo-list");
 const addBtn = document.querySelector(".add-task-btn");
+const todoList = document.querySelector(".todo-list");
+const addBtn = document.querySelector(".add-task-btn");
+
+const titleInput = document.querySelector("#title");
+const taskInput = document.querySelector("#task");
+const descInput = document.querySelector("#desc");
+
 
 // ---------- ADD ----------
 addBtn.addEventListener("click", async () => {
@@ -39,7 +46,7 @@ function renderTasks(tasks) {
       <div class="todo-item">
         <small>${t.created_at}</small>
         <br>
-        <h4>${t.title}</h4>
+        <h4>${t.title || ""}</h4>
         <p>${t.task}</p>
         <small>${t.description || ""}</small>
         <br>
@@ -89,5 +96,6 @@ document.querySelector(".logout").addEventListener("click", async () => {
 });
 
 loadTasks();
+
 
 
