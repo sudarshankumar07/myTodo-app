@@ -39,7 +39,7 @@ def init_db():
             user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
             title TEXT NOT NULL,
             task TEXT NOT NULL,
-            description TEXT,
+            description TEXT
         )
         
 
@@ -275,5 +275,6 @@ def update_task(task_id):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 
 
