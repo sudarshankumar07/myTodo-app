@@ -198,7 +198,7 @@ def add_task():
             (session["user_id"], title, task, description)
         )
         db.commit()
-        return jsonify({"success": True})
+        return jsonify({"success": True}),201
 
     except psycopg2.Error as e:
         db.rollback()
@@ -230,7 +230,7 @@ def show_task():
     cur.close()
     db.close()
 
-    return jsonify({"tasks": tasks})
+    return jsonify({"tasks": tasks}),200
 
 
 # ---------------- DELETE TASK ----------------
@@ -256,7 +256,7 @@ def delete_task():
     cur.close()
     db.close()
 
-    return jsonify({"success": deleted == 1})
+    return jsonify({"success": deleted == 1}),200
 
 
 # ---------------- UPDATE TASK ----------------
@@ -300,11 +300,12 @@ def update_task(task_id):
     if updated == 0:
         return jsonify({"error": "Task not found"}), 404
 
-    return jsonify({"success": True})
+    return jsonify({"success": True}),200
 
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 
