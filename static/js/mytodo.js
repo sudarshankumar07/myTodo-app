@@ -43,9 +43,9 @@ function renderTasks(tasks) {
   tasks.forEach(t => {
     todoList.innerHTML += `
       <div class="todo-item">
-        <small>${t.created_at}</small>
+        <small>${t.created_at || ""}</small>
         <br>
-        <h4>${t.title || ""}</h4>
+        <h4>${t.title }</h4>
         <p>${t.task}</p>
         <small>${t.description || ""}</small>
         <br>
@@ -95,6 +95,7 @@ document.querySelector(".logout").addEventListener("click", async () => {
 });
 
 loadTasks();
+
 
 
 
