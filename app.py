@@ -124,7 +124,7 @@ def user_login():
         return jsonify({"error": "Invalid credentials"}), 401
 
     session["user_id"] = user["id"]
-    return jsonify({"success": True, "redirect": "/todo"})
+    return jsonify({"success": True, "redirect": "todo"})
 
 
 @app.route("/api/logout", methods=["POST"])
@@ -275,6 +275,7 @@ def update_task(task_id):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
