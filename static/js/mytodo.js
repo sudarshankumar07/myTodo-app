@@ -22,7 +22,9 @@ addBtn.addEventListener("click", async () => {
     body: JSON.stringify({ title, task, description: desc })
   });
 
-  if (!res.ok) return alert("Add failed");
+ if (!res.ok) {
+      throw new Error(data.error || "Failed to add task");
+    };
   clearInputs();
   loadTasks();
 });
@@ -81,7 +83,7 @@ todoList.addEventListener("click", async e => {
     });
 
     clearInputs();
-    loadTasks();
+    await loadTasks();
   }
 });
 
