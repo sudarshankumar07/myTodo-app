@@ -115,6 +115,7 @@ todoList.addEventListener("click",async (e)=>{
     try{
       const res = await fetch("/delete-task",{
         method: "POST",
+        credentials: "include",
         headers : {"Content-Type":"application/json"},
         body: JSON.stringify({task_id: taskId })
 
@@ -160,6 +161,7 @@ todoList.addEventListener("click",async (e)=>{
       const res = await fetch(`/update-task/${taskId}`, {
 
         method: "PATCH",
+        credentials: "include",
         headers : {"Content-Type":"application/json"},
         body: JSON.stringify(payload)
 
@@ -182,4 +184,5 @@ todoList.addEventListener("click",async (e)=>{
     
   }
 })
+
 
