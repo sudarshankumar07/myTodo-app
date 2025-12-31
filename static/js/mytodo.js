@@ -1,7 +1,6 @@
 const todoList = document.querySelector(".todo-list");
 const addBtn = document.querySelector(".add-task-btn");
-const todoList = document.querySelector(".todo-list");
-const addBtn = document.querySelector(".add-task-btn");
+
 
 const titleInput = document.querySelector("#title");
 const taskInput = document.querySelector("#task");
@@ -96,6 +95,7 @@ document.querySelector(".logout").addEventListener("click", async () => {
 });
 
 loadTasks();
+
 
 
 
